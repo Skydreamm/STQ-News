@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nouvelle annonce</title>
+</head>
+<body>
+    <h1>Déposer une nouvelle annonce</h1>
+    <form method="post">
+        <label for="titre">Titre:</label>
+        <input type="text" id="titre" name="titre"><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br>
+        <button type="submit">Soumettre</button>
+    </form>
+    <a href="{{ url_for('index') }}">Retour à la liste des annonces</a>
+</body>
+</html>
