@@ -14,7 +14,7 @@ const articles = [
                 date: new Date('2024-07-11')
             },
             {
-                title: "Guide Estivale",
+                title: "Guide de l'Estivale",
                 images: [
                     "Image/STQ ete.jpg",
                     "https://www.calameo.com/read/004873246ccfefb67b7fc?authid=YOURS_AUTH_ID"
@@ -51,6 +51,17 @@ const articles = [
                     popupImages.appendChild(img);
                 }
             });
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const allerBtn = document.getElementById('aller-btn');
+                if (allerBtn) {
+                    allerBtn.addEventListener('click', function(e) {
+                        e.preventDefault();  // Empêche le comportement par défaut du lien
+                        window.location.href = 'actualites.html';  // Redirige vers la page actualites.html
+                    });
+                }
+            });
+            
             document.getElementById('popup-description').innerHTML = detailedDescription;
             document.getElementById('popup').style.display = "block";
             document.getElementById('popup').addEventListener('click', closePopup);
