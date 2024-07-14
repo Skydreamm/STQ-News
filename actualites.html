@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Saint-Quentin Infos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #05004b;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: relative;
+        }
+        .header img {
+            max-height: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .articles {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2em; /* Ajouter un espace entre les articles */
+            justify-items: center;
+        }
+        .article {
+            background: #0c0e24;
+            padding: 1em;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px; /* Limitez la largeur des articles */
+        }
+        .article h2 {
+            margin-top: 1em;
+            padding: 0;
+            color: #ffffff; /* Couleur des titres des articles */
+        }
+        .article img {
+            max-width: 100%;
+            max-height: 300px;
+            width: auto;
+            height: auto;
+            border-radius: 0px;
+            margin-bottom: 1em;
+            object-fit: cover;
+        }
+        .description {
+            max-width: 100%;
+            display: block;
+            margin-top: 1em;
+            font-size: 0.9em;
+            color: #ffffff; /* Couleur des descriptions */
+            text-align: center;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .popup-content {
+            background-color: #0c0e24;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #ffffff;
+            width: 80%;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+        .popup iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 15px;
+        }
+        .popup .description, .popup h2 {
+            color: white; /* Couleur des descriptions et des titres dans le popup */
+        }
+        .close {
+            color: #ff0202;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .full-image-popup {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        .full-image-popup img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+        }
+        .full-image-popup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+        }
+        .full-image-popup .close:hover,
+        .full-image-popup .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .popup-content img {
+            max-width: 100%;
+            max-height: 600px;
+            width: auto;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 1em;
+            object-fit: cover;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="Image/Logo infos.svg" alt="Logo de Saint-Quentin Infos">
+    </div>
+    <div class="container">
+        <div class="articles" id="articles">
+            <!-- Les articles seront insérés ici par JavaScript -->
+        </div>
+    </div>
+
+    <div id="popup" class="popup" onclick="closePopup(event)">
+        <div class="popup-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="closePopup(event)">&times;</span>
+            <h2 id="popup-title"></h2>
+            <div id="popup-images"></div>
+            <p id="popup-description" class="description"></p>
+        </div>
+    </div>
+
+    <div id="fullImagePopup" class="full-image-popup" onclick="closeFullImagePopup(event)">
+        <span class="close" onclick="closeFullImagePopup(event)">&times;</span>
+        <img id="fullImage" src="" alt="Image Agrandie">
+    </div>
+
+    <script>
+        const articles = [
+            {
+                title: "Passage de la Flamme Olympique",
+                images: ["Image/Logo JO.SVG", "Image/Parcours JO.jpg"],
+                description: "Retrouver ici le déroulement de la journée du passage de la Flamme Olympique.",
+                detailedDescription: "En ce jour spécial,<p>La Flamme Olympique passera par plusieurs points clés de la ville, avec des festivités tout au long de la journée.<br> Ne manquez pas les spectacles de rue et les concerts gratuits organisés pour célébrer cet événement unique.</p>",
+                date: new Date('2024-07-17')
+            },
+            {
+                title: "Olympic Center",
+                images: ["Image/Olympic Center.jpg", "path/to/another/image2.jpg"],
+                description: "Le Centre Ville de Saint-Quentin se transforme en lieu olympique.",
+                detailedDescription: "Voici le lieu où le sport est le sujet principale, venez vous initier avec des structures ludiques et sportives pour petits et grands.<br> Sans oublier un coin détente et farniente pour vous relaxer entre deux challenges.<p><strong>Rendez-vous sur la Place de l Hôtel de ville du mardi au dimanche de 14h à 19h !</strong></p>",
+                date: new Date('2024-07-11')
+            },
+            {
+                title: "Guide Estivale",
+                images: [
+                    "Image/STQ ete.jpg",
+                    "https://www.calameo.com/read/004873246ccfefb67b7fc?authid=YOURS_AUTH_ID"
+                ],
+                description: "Voici les évênements qui a lieu sur Saint-Quentin.",
+                detailedDescription: "Programme détaillé des événements possible sur la ville de Saint-Quentin",
+                date: new Date('2024-07-11')
+            },
+            // Ajoutez plus d'articles ici
+        ];
+
+        function openPopup(title, images, detailedDescription) {
+            document.getElementById('popup-title').innerText = title;
+            const popupImages = document.getElementById('popup-images');
+            popupImages.innerHTML = '';
+            images.forEach(src => {
+                if (src.includes('calameo.com')) {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = src + '&authid=YOURS_AUTH_ID&view=slide&pagemode=none';
+                    iframe.width = "100%";
+                    iframe.height = "600px";
+                    iframe.style.border = "none";
+                    popupImages.appendChild(iframe);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `Image de ${title}`;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '600px';
+                    img.onclick = (event) => {
+                        event.stopPropagation();
+                        openFullImagePopup(src);
+                    };
+                    popupImages.appendChild(img);
+                }
+            });
+            document.getElementById('popup-description').innerHTML = detailedDescription;
+            document.getElementById('popup').style.display = "block";
+            document.getElementById('popup').addEventListener('click', closePopup);
+        }
+
+        function openFullImagePopup(src) {
+            const fullImagePopup = document.getElementById('fullImagePopup');
+            const fullImage = document.getElementById('fullImage');
+            fullImage.src = src;
+            fullImagePopup.style.display = "flex";
+            fullImagePopup.addEventListener('click', closeFullImagePopup);
+        }
+
+        function closeFullImagePopup(event) {
+            if (event.target === document.getElementById('fullImagePopup') || event.target.className === 'close') {
+                document.getElementById('fullImagePopup').style.display = "none";
+                document.getElementById('fullImagePopup').removeEventListener('click', closeFullImagePopup);
+            }
+        }
+
+        function closePopup(event) {
+            if (event.target === document.getElementById('popup') || event.target.className === 'close') {
+                document.getElementById('popup').style.display = "none";
+                document.getElementById('popup').removeEventListener('click', closePopup);
+            }
+        }
+
+        function truncateDescription(description, wordLimit) {
+            const words = description.split(' ');
+            if (words.length > wordLimit) {
+                return words.slice(0, wordLimit).join(' ') + '...';
+            }
+            return description;
+        }
+
+        function renderArticles() {
+            const articlesContainer = document.getElementById('articles');
+            articles.sort((a, b) => a.date - b.date);
+            articles.forEach(article => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'article';
+                articleElement.onclick = () => openPopup(article.title, article.images, article.detailedDescription);
+                articleElement.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <img src="${article.images[0]}" alt="Image de ${article.title}">
+                    <p class="description">${truncateDescription(article.description, 15)}</p>
+                `;
+                articlesContainer.appendChild(articleElement);
+            });
+        }
+
+        renderArticles();
+    </script>
+</body>
+</html>
